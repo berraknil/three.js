@@ -4,6 +4,15 @@
 // WHy use Cube Camera
 // https://medium.com/@soffritti.pierfrancesco/dynamic-reflections-in-three-js-2d46f3378fc4
 
+// Cube camera reflections
+// http://learningthreejs.com/blog/2014/05/12/live-cube-maps-reflections-in-your-three-dot-js-game-with-threex-dot-cubecamera/
+
+// Camera LookAt information
+// https://stackoverflow.com/questions/27957645/three-js-find-the-current-lookat-of-a-camera
+
+// Camera rotate around scene
+// https://mikeheavers.com/tutorials/webgl_circular_camera_rotation_around_a_single_axis_in_threejs/
+
 if (WEBGL.isWebGLAvailable() === false) {
   document.body.appendChild(WEBGL.getWebGLErrorMessage());
 }
@@ -34,7 +43,9 @@ function init() {
     1,
     20000
   );
-  camera.position.set(30, 30, 100);
+  camera.position.set(30, 180, 100);
+  camera.lookAt(scene.position);
+  // camera.rotation.y = 30;
 
   //
 
@@ -69,6 +80,7 @@ function init() {
   // Skybox
 
   var sky = new THREE.Sky();
+  // skybox scale
   sky.scale.setScalar(10000);
   scene.add(sky);
 
@@ -130,16 +142,17 @@ function init() {
   });
 
   sphere = new THREE.Mesh(geometry, material);
+  // sphere.position.z = -100;
   scene.add(sphere);
 
   //
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.maxPolarAngle = Math.PI * 0.495;
   controls.target.set(0, 10, 0);
   controls.minDistance = 40.0;
   controls.maxDistance = 200.0;
-  camera.lookAt(controls.target);
+  // camera.lookAt(controls.target);
 
   //
 
@@ -174,9 +187,9 @@ function init() {
 
   const cameraRotationFolder = gui.addFolder('CameraRotation');
 
-  cameraRotationFolder.add(camera.rotation, 'x', -1, 1).step(0.1);
-  cameraRotationFolder.add(camera.rotation, 'y', -1, 1).step(0.1);
-  cameraRotationFolder.add(camera.rotation, 'z', 0, 20).step(0.1);
+  cameraRotationFolder.add(camera.rotation, 'x', -500, 500).step(0.1);
+  cameraRotationFolder.add(camera.rotation, 'y', -500, 500).step(0.1);
+  cameraRotationFolder.add(camera.rotation, 'z', 0, 5000).step(0.1);
   cameraRotationFolder.open();
   //
 
