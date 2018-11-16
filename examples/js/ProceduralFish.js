@@ -13,6 +13,12 @@
 // Camera rotate around scene
 // https://mikeheavers.com/tutorials/webgl_circular_camera_rotation_around_a_single_axis_in_threejs/
 
+//webgl interactive cubes example
+
+// https://www.kadenze.com/courses/the-nature-of-code-ii/sessions/steering-behaviors
+
+// go thru all the examples and former libs as well to see code
+
 if (WEBGL.isWebGLAvailable() === false) {
   document.body.appendChild(WEBGL.getWebGLErrorMessage());
 }
@@ -92,7 +98,7 @@ function init() {
   uniforms.mieCoefficient.value = 0.005;
   uniforms.mieDirectionalG.value = 0.8;
 
-  var parameters = { distance: 400, inclination: 0.49, azimuth: 0.205 };
+  var parameters = { distance: 400, inclination: 0.244, azimuth: 0.236 };
 
   var cubeCamera = new THREE.CubeCamera(1, 20000, 256);
   cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
@@ -115,7 +121,9 @@ function init() {
 
   updateSun();
 
-  //
+  // Objects
+
+  let fishes = [];
 
   var geometry = new THREE.IcosahedronBufferGeometry(20, 1);
   var count = geometry.attributes.position.count;
@@ -133,17 +141,22 @@ function init() {
 
   geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-  var material = new THREE.MeshStandardMaterial({
-    vertexColors: THREE.VertexColors,
-    roughness: 0.0,
-    flatShading: true,
-    envMap: cubeCamera.renderTarget.texture,
-    side: THREE.DoubleSide
-  });
+  for (let i = 0; i < 20; i++) {
+    var material = new THREE.MeshStandardMaterial({
+      vertexColors: THREE.VertexColors,
+      roughness: 0.0,
+      flatShading: true,
+      envMap: cubeCamera.renderTarget.texture,
+      side: THREE.DoubleSide
+    });
 
-  sphere = new THREE.Mesh(geometry, material);
-  // sphere.position.z = -100;
-  scene.add(sphere);
+    sphere = new THREE.Mesh(geometry, material);
+    sphere.position.x = Math.random() * 80 - 40;
+    // sphere.position.y = Math.random() * 800 - 400;
+    sphere.position.z = Math.random() * 80 - 40;
+    // sphere.position.z = -100;
+    scene.add(sphere);
+  }
 
   //
 
