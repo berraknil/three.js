@@ -19,6 +19,11 @@
 
 // go thru all the examples and former libs as well to see code
 
+// https://stackoverflow.com/questions/37441875/threejs-multiple-mesh-animation
+
+// Texture error
+//https://github.com/mrdoob/three.js/issues/3574
+
 if (WEBGL.isWebGLAvailable() === false) {
   document.body.appendChild(WEBGL.getWebGLErrorMessage());
 }
@@ -26,6 +31,7 @@ if (WEBGL.isWebGLAvailable() === false) {
 let container, stats;
 let camera, scene, renderer, light;
 let controls, water, sphere;
+let fishes, numOfFishes;
 
 function init() {
   container = document.getElementById('container');
@@ -123,9 +129,10 @@ function init() {
 
   // Objects
 
-  let fishes = [];
+  fishes = [];
+  numOfFishes = 20;
 
-  var geometry = new THREE.IcosahedronBufferGeometry(20, 1);
+  var geometry = new THREE.IcosahedronBufferGeometry(10, 1);
   var count = geometry.attributes.position.count;
 
   var colors = [];
@@ -141,21 +148,31 @@ function init() {
 
   geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-  for (let i = 0; i < 20; i++) {
-    var material = new THREE.MeshStandardMaterial({
-      vertexColors: THREE.VertexColors,
-      roughness: 0.0,
-      flatShading: true,
-      envMap: cubeCamera.renderTarget.texture,
-      side: THREE.DoubleSide
-    });
+  var material = new THREE.MeshStandardMaterial({
+    vertexColors: THREE.VertexColors,
+    roughness: 0.0,
+    flatShading: true,
+    envMap: cubeCamera.renderTarget.texture,
+    side: THREE.DoubleSide
+  });
 
+  // let material = new THREE.MeshPhongMaterial({
+  //   color: 0x000000,
+  //   specular: 0x666666,
+  //   emissive: 0xffffff,
+  //   shininess: 10,
+  //   opacity: 0.9,
+  //   transparent: true
+  // });
+
+  for (let i = 0; i < numOfFishes; i++) {
     sphere = new THREE.Mesh(geometry, material);
-    sphere.position.x = Math.random() * 80 - 40;
+    sphere.position.x = Math.random() * 200 - 100;
     // sphere.position.y = Math.random() * 800 - 400;
-    sphere.position.z = Math.random() * 80 - 40;
+    sphere.position.z = Math.random() * 200 - 100;
     // sphere.position.z = -100;
     scene.add(sphere);
+    fishes.push(sphere);
   }
 
   //
@@ -218,6 +235,7 @@ function onWindowResize() {
 
 function animate() {
   requestAnimationFrame(animate);
+
   render();
   stats.update();
 }
@@ -226,8 +244,10 @@ function render() {
   var time = performance.now() * 0.001;
 
   // sphere.position.y = Math.sin(time) * 20 + 5;
-  sphere.rotation.x = time * 0.5;
-  sphere.rotation.z = time * 0.51;
+  for (let i = 0; i < numOfFishes; i++) {
+    fishes[i].rotation.z = time * 0.51;
+    fishes[i].rotation.x = time * 0.5;
+  }
 
   water.material.uniforms.time.value += 1.0 / 60.0;
 
